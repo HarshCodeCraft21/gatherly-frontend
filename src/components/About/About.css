@@ -1,0 +1,244 @@
+.about-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--accent)) 100%);
+  padding-top: 120px;
+  padding-bottom: 4rem;
+}
+
+.about-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.about-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 5rem;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.about-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: hsl(var(--foreground));
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.about-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  line-height: 1.4;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.7;
+}
+
+.about-image {
+  position: relative;
+  border-radius: calc(var(--radius) * 2);
+  overflow: hidden;
+  box-shadow: var(--shadow-glow);
+}
+
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.about-image:hover img {
+  transform: scale(1.05);
+}
+
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  border-radius: calc(var(--radius) * 2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 3rem;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  font-weight: 500;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.about-mission {
+  margin-bottom: 5rem;
+  text-align: center;
+}
+
+.mission-text {
+  font-size: 1.2rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.about-values {
+  margin-bottom: 5rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.value-card {
+  background: hsl(var(--card));
+  padding: 2rem;
+  border-radius: calc(var(--radius) * 2);
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  border: 1px solid hsl(var(--border));
+  transition: var(--transition-smooth);
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.value-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--primary-foreground));
+}
+
+.value-icon svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.value-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+}
+
+.value-description {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+}
+
+.about-story {
+  text-align: center;
+}
+
+.story-content {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.story-content p {
+  font-size: 1.1rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.7;
+  text-align: left;
+}
+
+@media (max-width: 1024px) {
+  .about-hero {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  
+  .about-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  
+  .values-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding-top: 100px;
+  }
+  
+  .about-container {
+    padding: 0 1rem;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+  }
+  
+  .about-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .about-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .value-card {
+    padding: 1.5rem;
+  }
+}

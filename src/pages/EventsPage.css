@@ -1,0 +1,28 @@
+.events-page {
+  min-height: 100vh;
+  padding-top: 120px;
+}
+
+.events-page-header {
+  text-align: center;
+  padding: 2rem 0;
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--accent)) 100%);
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: hsl(var(--foreground));
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: hsl(var(--muted-foreground));
+  max-width: 600px;
+  margin: 0 auto;
+}

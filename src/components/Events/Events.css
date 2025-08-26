@@ -1,0 +1,210 @@
+.events-section {
+  padding: 5rem 0;
+  background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--accent)) 100%);
+  min-height: 100vh;
+}
+
+.events-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.events-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.events-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.events-subtitle {
+  font-size: 1.2rem;
+  color: hsl(var(--muted-foreground));
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1rem;
+}
+
+.event-card {
+  background: hsl(var(--card));
+  border-radius: calc(var(--radius) * 2);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition-smooth);
+  border: 1px solid hsl(var(--border));
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-glow), 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.event-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.event-card:hover .event-image img {
+  transform: scale(1.1);
+}
+
+.event-category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: var(--gradient-primary);
+  color: hsl(var(--primary-foreground));
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.event-content {
+  padding: 1.5rem;
+}
+
+.event-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.event-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+
+.detail-icon {
+  width: 1rem;
+  height: 1rem;
+  color: hsl(var(--primary));
+}
+
+.event-availability {
+  margin-bottom: 1.5rem;
+}
+
+.availability-indicator {
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+}
+
+.availability-indicator.high {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.availability-indicator.medium {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.05));
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.availability-indicator.low {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.seats-available {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+.availability-bar {
+  width: 100%;
+  height: 4px;
+  background: hsl(var(--border));
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.availability-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: var(--transition-smooth);
+}
+
+.register-btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-primary);
+  color: hsl(var(--primary-foreground));
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-glow);
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow), 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.register-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .events-section {
+    padding: 3rem 0;
+  }
+  
+  .events-container {
+    padding: 0 1rem;
+  }
+  
+  .events-title {
+    font-size: 2.5rem;
+  }
+  
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .event-content {
+    padding: 1rem;
+  }
+}

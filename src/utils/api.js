@@ -1,0 +1,12 @@
+export const REGISTER = "https://gatherly-dyco.onrender.com/api/users/register";
+export const LOGIN = "https://gatherly-dyco.onrender.com/api/users/login";
+export const LOGOUT = "https://gatherly-dyco.onrender.com/api/user/logout";
+export const USER_INFO_UPDATE = "https://gatherly-dyco.onrender.com/api/users/updateUser";
+export const CHANGE_PASSWORD = "https://gatherly-dyco.onrender.com/api/users/changePassword";
+export const CREATE_EVENT = "https://gatherly-dyco.onrender.com/api/events/createEvent";
+export const UPDATE_EVENT = "https://gatherly-dyco.onrender.com/api/events/updateEvent";
+export const DELETE = "https://gatherly-dyco.onrender.com/api/events/deleteEvent/:id";
+export const CREATE_BOOKING = "https://gatherly-dyco.onrender.com/api/booking/createBooking/:id";
+export const DELETE_BOOKING = "https://gatherly-dyco.onrender.com/api/booking/deleteBooking/:id";
+export const ALL_EVENT = "https://gatherly-dyco.onrender.com/api/events/allEvent";
+export const FIND_EVENT_BY_ID = "https://gatherly-dyco.onrender.com/api/events";
