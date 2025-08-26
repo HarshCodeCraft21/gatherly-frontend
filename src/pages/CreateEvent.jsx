@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, FileText } from 'lucide-react';
 import './CreateEvent.css';
 import { CREATE_EVENT } from '../utils/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -19,6 +21,27 @@ const CreateEvent = () => {
     category: '',
   });
 
+  // ✅ Page load होते ही role check
+  useEffect(() => {
+    const token = Cookies.get("JwtToken");
+    if (!token) {
+      toast.error("Please login first");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      if (decoded.role !== "admin") {
+        toast.error("You are not authorized to access this page!");
+        navigate("/events");
+      }
+    } catch (err) {
+      toast.error("Invalid token");
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -26,16 +49,35 @@ const CreateEvent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post(CREATE_EVENT, formData, {
-      withCredentials: true,
-    });
-    console.log(res.data)
-    toast.success(res.data.message || "Event created successfully!");
-    navigate('/events');
-    // try {
-    // } catch (error) {
-    //   toast.error(error.response?.data?.message || error.message);
-    // }
+
+    const token = Cookies.get("JwtToken");
+    let role = null;
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        role = decoded.role;
+      } catch (error) {
+        toast.error("Invalid token");
+        return;
+      }
+    }
+
+    if (role !== "admin") {
+      toast.error("You are not authorized to create events!");
+      navigate("/events");
+      return;
+    }
+
+    try {
+      const res = await axios.post(CREATE_EVENT, formData, {
+        withCredentials: true,
+      });
+      toast.success(res.data.message || "Event created successfully!");
+      navigate('/events');
+    } catch (error) {
+      toast.error(error.response?.data?.message || error.message);
+    }
   };
 
   // Config for reusable form fields
