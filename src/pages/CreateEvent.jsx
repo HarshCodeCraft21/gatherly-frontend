@@ -50,7 +50,7 @@ const CreateEvent = () => {
       toast.success(res.data.message || "Event created successfully!");
       navigate('/events');
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error("Something Went Wrong try after some time");
     }
   };
 
