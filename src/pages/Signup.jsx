@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import { REGISTER } from '../utils/api.js';
+import { REGISTER } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import './Signup.css';

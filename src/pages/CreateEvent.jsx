@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, FileText } from 'lucide-react';
 import './CreateEvent.css';
-import { CREATE_EVENT } from '../utils/api.js';
+import { CREATE_EVENT } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -21,7 +21,6 @@ const CreateEvent = () => {
     category: '',
   });
 
-  // ✅ Page load होते ही role check
   useEffect(() => {
     const token = Cookies.get("JwtToken");
     if (!token) {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, Cookie } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { LOGIN } from '../utils/api.js'
+import { LOGIN } from '../api/api.js'
 
 import Cookies from "js-cookie";
 import axios from 'axios';

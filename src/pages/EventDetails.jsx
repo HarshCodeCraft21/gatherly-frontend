@@ -4,7 +4,7 @@ import techConference from '../assets/tech-conference.jpg';
 import './EventDetails.css';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FIND_EVENT_BY_ID } from '../utils/api.js';
+import { FIND_EVENT_BY_ID } from '../api/api.js';
 import axios from 'axios';
 
 const EventDetails = () => {
