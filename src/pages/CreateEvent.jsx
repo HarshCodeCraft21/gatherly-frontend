@@ -29,19 +29,7 @@ const CreateEvent = () => {
       navigate("/login");
       return;
     }
-
-    try {
-      const decoded = jwtDecode(token);
-      if (decoded.role !== "admin") {
-        toast.error("You are not authorized to access this page!");
-        navigate("/events");
-      }
-    } catch (err) {
-      toast.error("Invalid token");
-      navigate("/login");
-    }
-  }, [navigate]);
-
+  })
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -51,26 +39,13 @@ const CreateEvent = () => {
     e.preventDefault();
 
     const token = Cookies.get("JwtToken");
-    let role = null;
-
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        role = decoded.role;
-      } catch (error) {
-        toast.error("Invalid token");
-        return;
-      }
-    }
-
-    if (role !== "admin") {
-      toast.error("You are not authorized to create events!");
-      navigate("/events");
-      return;
-    }
 
     try {
       const res = await axios.post(CREATE_EVENT, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }, {
         withCredentials: true,
       });
       toast.success(res.data.message || "Event created successfully!");
