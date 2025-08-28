@@ -15,11 +15,11 @@ const ChangePassword = () => {
   const [showNew, setShowNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [token, setToken] = useState(null);
+
   useEffect(() => {
     const tokenLS = localStorage.getItem("JwtToken");
-
     setToken(tokenLS);
-  })
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,34 +31,31 @@ const ChangePassword = () => {
     setIsLoading(true);
     try {
       const { oldPassword, newPassword } = formData;
+
       if (oldPassword === newPassword) {
-        toast.error("choose different password")
+        toast.error("Choose a different password");
+        setIsLoading(false);
+        return;
       }
 
-      const res = await axios.put(CHANGE_PASSWORD, {
-        oldPassword,
-        newPassword
-      }, {
-        withCredentials: true
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const res = await axios.put(
+        CHANGE_PASSWORD,
+        { oldPassword, newPassword },
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success(res.data.message);
 
-      setFormData({
-        oldPassword: "",
-        newPassword: ""
-      });
-      navigate("/")
+      setFormData({ oldPassword: "", newPassword: "" });
+      navigate("/");
     } catch (error) {
-      toast.error("failed to change password");
-      setFormData({
-        oldPassword: "",
-        newPassword: ""
-      });
+      toast.error(error.response?.data?.message || "Failed to change password");
+      setFormData({ oldPassword: "", newPassword: "" });
       setIsLoading(false);
     }
   };
@@ -68,6 +65,7 @@ const ChangePassword = () => {
       <section className="form-section">
         <h2 className="title">Change Password</h2>
         <form className="change-password-form" onSubmit={handleSubmit}>
+          {/* Current Password */}
           <div className="form-group">
             <label>Current Password</label>
             <div className="input-wrapper">
@@ -88,6 +86,7 @@ const ChangePassword = () => {
             </div>
           </div>
 
+          {/* New Password */}
           <div className="form-group">
             <label>New Password</label>
             <div className="input-wrapper">
