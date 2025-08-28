@@ -18,7 +18,6 @@ const Signup = lazy(() => import("./pages/Signup"));
 const EventDetails = lazy(() => import("./pages/EventDetails"));
 const CreateEvent = lazy(() => import("./pages/CreateEvent"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
