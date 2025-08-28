@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 
 const SettingsDropdown = () => {
   const [open, setOpen] = useState(false);
@@ -62,6 +63,7 @@ const SettingsDropdown = () => {
   );
 
   // Menu items
+  const navigate = useNavigate();
   const menuItems = [
     {
       label: "User Profile",
@@ -69,9 +71,9 @@ const SettingsDropdown = () => {
       onClick: () => alert("User Profile clicked"),
     },
     {
-      label: "Security",
+      label: "Change Password",
       icon: <Shield className="w-5 h-5 text-purple-500" />,
-      onClick: () => alert("Security clicked"),
+      onClick: () => navigate('/change-password'),
     },
     {
       label: "Logout",

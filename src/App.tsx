@@ -18,6 +18,8 @@ const Signup = lazy(() => import("./pages/Signup"));
 const EventDetails = lazy(() => import("./pages/EventDetails"));
 const CreateEvent = lazy(() => import("./pages/CreateEvent"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const ChangePassword = lazy(() => import("./pages/ChangePassword"));
+
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
@@ -64,6 +66,12 @@ const App: React.FC = () => {
                 path="/create-event"
                 element={
                   verifyToken ? <CreateEvent /> : <Navigate to="/login" replace />
+                }
+              />
+              <Route
+                path="/change-password"
+                element={
+                  verifyToken ? <ChangePassword /> : <Navigate to='/login' replace />
                 }
               />
               <Route path="*" element={<NotFound />} />
