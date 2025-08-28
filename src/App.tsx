@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import Cookies from "js-cookie";
+import ChangePassword from './pages/changePassword';
 
 // ✅ Lazy load pages/components
 const Home = lazy(() => import("./pages/Home"));
@@ -18,8 +19,6 @@ const Signup = lazy(() => import("./pages/Signup"));
 const EventDetails = lazy(() => import("./pages/EventDetails"));
 const CreateEvent = lazy(() => import("./pages/CreateEvent"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const ChangePassword = lazy(() => import("./pages/ChangePassword"));
-
 const queryClient = new QueryClient();
 
 const App: React.FC = () => {
