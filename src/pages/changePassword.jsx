@@ -1,5 +1,5 @@
 import './changePassword.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { CHANGE_PASSWORD } from '../api/api.js';
@@ -14,6 +14,12 @@ const ChangePassword = () => {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [token, setToken] = useState(null);
+  useEffect(() => {
+    const tokenLS = localStorage.getItem("JwtToken");
+
+    setToken(tokenLS);
+  })
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,6 +40,10 @@ const ChangePassword = () => {
         newPassword
       }, {
         withCredentials: true
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       toast.success(res.data.message);
