@@ -41,11 +41,10 @@ const Login = () => {
 
       toast.success(res.data.message);
       Cookies.set("JwtToken",res.data.JwtToken);
+      localStorage.setItem("JwtToken",res.data.JwtToken);
       setFormData({ email: "", password: "" });
 
-      // redirect instead of reload
-      // navigate('/'); // or /dashboard
-      window.location.reload(); // fallback if you prefer full refresh
+      window.location.reload(); 
 
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);

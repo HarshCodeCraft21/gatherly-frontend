@@ -37,7 +37,7 @@ const CreateEvent = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = Cookies.get("JwtToken");
+    const token = localStorage.getItem("JwtToken");
 
     try {
       const res = await axios.post(CREATE_EVENT, formData, {

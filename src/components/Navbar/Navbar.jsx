@@ -28,6 +28,7 @@ const Navbar = ({ verifyToken }) => {
   const clearToken = () => {
     if (confirm("Are you sure you want to Logout?")) {
       Cookie.remove("JwtToken");
+      localStorage.clear();
       setLoading(false);
       toast.success("You logged out successfully");
       window.location.reload();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ALL_EVENT } from '../../utils/api.js';
+import { ALL_EVENT } from '../../api/api.js';
 import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
