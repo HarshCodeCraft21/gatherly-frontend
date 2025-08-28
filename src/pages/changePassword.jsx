@@ -47,6 +47,7 @@ const ChangePassword = () => {
         oldPassword: "",
         newPassword: ""
       });
+      setIsLoading(false);
     }
   };
 
