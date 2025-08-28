@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, Cookie } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { LOGIN } from '../api/api.js'
 
-import Cookies from "js-cookie";
 import axios from 'axios';
 
 import './Login.css';
@@ -40,11 +39,10 @@ const Login = () => {
       });
 
       toast.success(res.data.message);
-      Cookies.set("JwtToken",res.data.JwtToken);
-      localStorage.setItem("JwtToken",res.data.JwtToken);
+      localStorage.setItem("JwtToken", res.data.JwtToken);
       setFormData({ email: "", password: "" });
 
-      window.location.reload(); 
+      window.location.reload();
 
     } catch (error) {
       toast.error(error.response?.data?.message || error.message);

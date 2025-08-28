@@ -6,9 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
-import Cookies from "js-cookie";
 import ChangePassword from './pages/changePassword';
-
+import Cookies from 'js-cookie';
 // ✅ Lazy load pages/components
 const Home = lazy(() => import("./pages/Home"));
 const EventsPage = lazy(() => import("./pages/EventsPage"));
@@ -26,8 +25,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("JwtToken");
-    Cookies.set("JwtToken", token);
-    setVerifyToken(token || null);
+    Cookies.set("JwtToken",token);
+    setVerifyToken(token);
   }, []);
 
   return (

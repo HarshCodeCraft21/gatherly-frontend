@@ -4,7 +4,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { CHANGE_PASSWORD } from '../api/api.js';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +24,7 @@ const ChangePassword = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +52,8 @@ const ChangePassword = () => {
       toast.success(res.data.message);
 
       setFormData({ oldPassword: "", newPassword: "" });
-      navigate("/");
+      localStorage.removeItem("JwtToken");
+      window.location.reload();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to change password");
       setFormData({ oldPassword: "", newPassword: "" });

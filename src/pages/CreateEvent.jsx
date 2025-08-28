@@ -6,7 +6,6 @@ import { CREATE_EVENT } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -38,7 +37,6 @@ const CreateEvent = () => {
     e.preventDefault();
 
     const token = localStorage.getItem("JwtToken");
-    // console.log(formData)
     try {
       const res = await axios.post(CREATE_EVENT, formData, {
         headers: {
