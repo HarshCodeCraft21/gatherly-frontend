@@ -39,7 +39,6 @@ const ChangePassword = () => {
         oldPassword: "",
         newPassword: ""
       });
-
       navigate("/")
     } catch (error) {
       toast.error("failed to change password");
