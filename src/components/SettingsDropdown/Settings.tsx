@@ -97,7 +97,7 @@ const SettingsDropdown = () => {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            className="sm:hidden fixed bottom-0 left-0 w-full z-30
+            className="sm:hidden fixed bottom-[-200px] left-0 w-full z-30
                        bg-white border-t border-purple-300 rounded-t-2xl shadow-2xl p-4"
           >
             <div className="flex justify-center mb-3">
