@@ -26,8 +26,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("JwtToken");
-    const cookieToken = Cookies.set("JwtToken",token);
-    console.log(cookieToken)
+    Cookies.set("JwtToken", token);
     setVerifyToken(token || null);
   }, []);
 

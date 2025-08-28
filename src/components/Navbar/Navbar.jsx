@@ -1,10 +1,10 @@
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { Calendar, LogOutIcon, Menu, X , Mail} from 'lucide-react';
+import { Calendar, LogOutIcon, Menu, X, Mail } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { jwtDecode } from "jwt-decode";
-import Cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 
 const Navbar = ({ verifyToken }) => {
   const [user, setUser] = useState("");
@@ -27,8 +27,8 @@ const Navbar = ({ verifyToken }) => {
 
   const clearToken = () => {
     if (confirm("Are you sure you want to Logout?")) {
-      Cookie.remove("JwtToken");
       localStorage.clear();
+      Cookies.remove("JwtToken");
       setLoading(false);
       toast.success("You logged out successfully");
       window.location.reload();
