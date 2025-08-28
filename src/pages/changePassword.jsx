@@ -29,7 +29,10 @@ const ChangePassword = () => {
         toast.error("choose different password")
       }
 
-      const res = await axios.put(CHANGE_PASSWORD, formData, {
+      const res = await axios.put(CHANGE_PASSWORD, {
+        oldPassword,
+        newPassword
+      }, {
         withCredentials: true
       })
 
