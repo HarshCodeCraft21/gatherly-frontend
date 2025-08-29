@@ -71,7 +71,7 @@ const Footer = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <Mail className="contact-icon" />
-                <span>hello@gatherly.com</span>
+                <span>gatherly7@gmail.com</span>
               </div>
               <div className="contact-item">
                 <Phone className="contact-icon" />
@@ -90,9 +90,6 @@ const Footer = () => {
           <div className="footer-bottom-content">
             <p className="copyright">
               © {currentYear} Gatherly. All rights reserved.
-            </p>
-            <p className="footer-tagline">
-              Made with ❤️ for the community
             </p>
           </div>
         </div>
