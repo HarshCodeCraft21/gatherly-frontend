@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ChangePassword from './pages/changePassword';
 import Cookies from 'js-cookie';
+import ScrollToTop from './components/ScrollTop/ScrollToTop'
 // ✅ Lazy load pages/components
 const Home = lazy(() => import("./pages/Home"));
 const EventsPage = lazy(() => import("./pages/EventsPage"));
@@ -25,7 +26,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("JwtToken");
-    Cookies.set("JwtToken",token);
+    Cookies.set("JwtToken", token);
     setVerifyToken(token);
   }, []);
 
@@ -37,6 +38,7 @@ const App: React.FC = () => {
         <BrowserRouter>
           <Navbar verifyToken={verifyToken} />
           <Suspense fallback={<div className="text-center p-10">Loading...</div>}>
+            <ScrollToTop />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/events" element={<EventsPage />} />

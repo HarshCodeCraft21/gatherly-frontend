@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowLeft, Clock, IndianRupee } from 'lucide-react';
 import techConference from '../assets/tech-conference.jpg';
 import './EventDetails.css';
 import { useEffect, useState } from 'react';
@@ -86,6 +86,7 @@ const EventDetails = () => {
               <div className="event-meta-item">
                 <Calendar className="meta-icon" />
                 <span>{new Date(event.date).toLocaleDateString("en-IN", {
+                  weekday: "short",
                   day: "numeric",
                   month: "long",
                   year: "numeric"
@@ -94,7 +95,13 @@ const EventDetails = () => {
 
               <div className="event-meta-item">
                 <Clock className="meta-icon" />
-                <span>{event.time}</span> {/* Already in 12hr AM/PM */}
+                <span>
+                  {new Date(`1970-01-01T${event.time}`).toLocaleTimeString("en-IN", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true
+                  })}
+                </span>
               </div>
 
               <div className="event-meta-item">
@@ -103,8 +110,8 @@ const EventDetails = () => {
               </div>
 
               <div className="event-meta-item">
-                <DollarSign className="meta-icon" />
-                <span>${event.price}</span>
+                <IndianRupee className="meta-icon" />
+                <span>{event.price}/-</span>
               </div>
 
               <div className="event-meta-item">
@@ -119,27 +126,6 @@ const EventDetails = () => {
           <div className="event-description-section">
             <h2 className="section-title">About This Event</h2>
             <p className="event-description">{event.description}</p>
-          </div>
-
-          <div className="event-agenda-section">
-            <h2 className="section-title">Event Agenda</h2>
-            {event.agenda && event.agenda.length > 0 ? (
-              <div className="agenda-list">
-                {event.agenda.map((item, index) => {
-                  const [time, activity] = item.includes(" - ")
-                    ? item.split(" - ")
-                    : [null, item];
-                  return (
-                    <div key={index} className="agenda-item">
-                      {time && <div className="agenda-time">{time}</div>}
-                      <div className="agenda-activity">{activity}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <p className="no-agenda-text">Agenda will be updated soon.</p>
-            )}
           </div>
 
           <div className="event-booking-section">
@@ -159,7 +145,7 @@ const EventDetails = () => {
             <div className="pricing-section">
               <div className="price-display">
                 <span className="price-label">Ticket Price</span>
-                <span className="price-amount">${event.price}</span>
+                <span className="price-amount">₹{event.price}</span>
               </div>
 
               <button

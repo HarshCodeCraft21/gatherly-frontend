@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ALL_EVENT } from '../../api/api.js';
-import { Calendar, MapPin, Users, DollarSign } from 'lucide-react';
+import { Calendar, MapPin, Users, IndianRupee } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import techConference from '../../assets/tech-conference.jpg'; // fallback image
@@ -39,11 +39,6 @@ const Events = () => {
   return (
     <div className="events-section">
       <div className="events-container">
-        <div className="events-header">
-          <h2 className="events-title">Featured Events</h2>
-          <p className="events-subtitle">Discover amazing events happening near you</p>
-        </div>
-
         <div className="events-grid">
           {event.map((e) => (
             <div
@@ -72,8 +67,8 @@ const Events = () => {
                   </div>
 
                   <div className="event-detail">
-                    <DollarSign className="detail-icon" />
-                    <span>${e.price}</span>
+                    <IndianRupee className="detail-icon" />
+                    <span>{e.price}/-</span>
                   </div>
 
                   <div className="event-detail">
