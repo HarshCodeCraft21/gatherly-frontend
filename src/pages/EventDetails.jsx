@@ -15,12 +15,11 @@ const EventDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("jwtToken");
-    setToken(token);
-    console.log({
-      createBooking: CREATE_BOOKING,
-      verifyBooking: VERIFY_PAYMENT
-    })
+    const Token = localStorage.getItem("JwtToken");
+    if (!Token) {
+      toast.error("token is missing");
+    }
+    setToken(Token);
     const fetchEvent = async () => {
       try {
         const res = await axios.get(`${FIND_EVENT_BY_ID}/${id}`, {
@@ -35,7 +34,6 @@ const EventDetails = () => {
     };
     fetchEvent();
   }, [id]);
-
   const getAvailabilityStatus = (available, total) => {
     const percentage = (available / total) * 100;
     if (percentage > 50) return 'high';
