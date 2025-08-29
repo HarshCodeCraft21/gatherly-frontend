@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--accent)) 100%);
   padding: 2rem 0;
+  transition: background 0.3s ease;
 }
 
 .create-event-container {
@@ -24,6 +25,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  transition: all 0.3s ease;
 }
 
 .create-event-subtitle {
@@ -39,6 +41,7 @@
   padding: 2.5rem;
   box-shadow: var(--shadow-card);
   border: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
 }
 
 .form-grid {
@@ -101,7 +104,7 @@
 .form-select:focus {
   outline: none;
   border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+  box-shadow: 0 0 0 3px hsl(var(--primary)/0.1);
 }
 
 .form-textarea {
@@ -127,7 +130,7 @@
 
 .form-file-input:hover {
   border-color: hsl(var(--primary));
-  background: hsl(var(--primary) / 0.05);
+  background: hsl(var(--primary)/0.05);
 }
 
 .file-input-note {
@@ -142,6 +145,7 @@
   gap: 1rem;
   padding-top: 2rem;
   border-top: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
 }
 
 .cancel-btn,
@@ -151,7 +155,7 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: var(--transition-smooth);
+  transition: all 0.3s ease;
   min-width: 120px;
 }
 
@@ -175,12 +179,153 @@
 
 .create-btn:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-glow), 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-glow), 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .create-btn:active,
 .cancel-btn:active {
   transform: translateY(0);
+}
+
+/* Modern Time Picker Styling */
+.time-picker-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.time-picker-input {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: none !important; /* Forcefully remove border */
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
+}
+
+.time-picker-input .react-time-picker__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none !important; /* Remove border from wrapper */
+}
+
+.time-picker-input .react-time-picker__inputGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: none !important; /* Remove border from input group */
+}
+
+.time-picker-input .react-time-picker__inputGroup__input {
+  padding: 0.65rem;
+  border-radius: var(--radius);
+  border: none !important; /* Remove border from individual inputs */
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  text-align: center;
+  width: 3.5rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
+}
+
+.time-picker-input .react-time-picker__inputGroup__divider {
+  padding: 0.65rem 0;
+  font-size: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.time-picker-input .react-time-picker__inputGroup__amPm {
+  padding: 0.65rem;
+  border-radius: var(--radius);
+  border: none !important; /* Remove border from AM/PM */
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  font-size: 0.9rem;
+  width: 4rem;
+  text-align: center;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='hsl(var(--foreground))' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 0.8rem;
+  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
+}
+
+.time-picker-input:focus-within,
+.time-picker-input .react-time-picker__inputGroup__input:focus,
+.time-picker-input .react-time-picker__inputGroup__amPm:focus {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 3px hsl(var(--primary)/0.1);
+  outline: none;
+}
+
+.time-picker-input:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 5px hsl(var(--primary)/0.15);
+}
+
+.time-picker-input .react-time-picker__inputGroup__amPm:hover {
+  border-color: hsl(var(--primary));
+  background: hsl(var(--primary)/0.05);
+}
+
+/* Clock icon button */
+.react-time-picker__clock-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  color: hsl(var(--primary));
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.react-time-picker__clock-button:hover {
+  color: hsl(var(--accent));
+}
+
+/* Disabled state */
+.time-picker-input:disabled,
+.react-time-picker__inputGroup__input:disabled,
+.react-time-picker__inputGroup__amPm:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Clock popup */
+.react-time-picker__clock {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .time-picker-input {
+    padding: 0.65rem 0.8rem;
+  }
+
+  .react-time-picker__inputGroup__input {
+    width: 2.5rem;
+    padding: 0.5rem;
+  }
+
+  .react-time-picker__inputGroup__amPm {
+    padding: 0.5rem;
+  }
 }
 
 @media (max-width: 768px) {

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, DollarSign, ArrowLeft } from 'lucide-react';
+import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Clock } from 'lucide-react';
 import techConference from '../assets/tech-conference.jpg';
 import './EventDetails.css';
 import { useEffect, useState } from 'react';
@@ -29,22 +29,11 @@ const EventDetails = () => {
     fetchEvent();
   }, [id]);
 
-  const getAvailabilityStatus = (available, capacity) => {
-    const percentage = (available / capacity) * 100;
+  const getAvailabilityStatus = (available, total) => {
+    const percentage = (available / total) * 100;
     if (percentage > 50) return 'high';
     if (percentage > 20) return 'medium';
     return 'low';
-  };
-
-  const formatDateTime = (dateStr, timeStr) => {
-    const dateObj = new Date(`${dateStr}T${timeStr}`);
-    return dateObj.toLocaleString('en-IN', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   if (loading) {
@@ -86,7 +75,7 @@ const EventDetails = () => {
               alt={event.title}
             />
             <div className="event-hero-category">
-              {event.category || 'Marketing'}
+              {event.category || 'General'}
             </div>
           </div>
 
@@ -96,7 +85,16 @@ const EventDetails = () => {
             <div className="event-details-meta">
               <div className="event-meta-item">
                 <Calendar className="meta-icon" />
-                <span>{formatDateTime(event.date, event.time)}</span>
+                <span>{new Date(event.date).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric"
+                })}</span>
+              </div>
+
+              <div className="event-meta-item">
+                <Clock className="meta-icon" />
+                <span>{event.time}</span> {/* Already in 12hr AM/PM */}
               </div>
 
               <div className="event-meta-item">
@@ -111,7 +109,7 @@ const EventDetails = () => {
 
               <div className="event-meta-item">
                 <Users className="meta-icon" />
-                <span>{event.capacity} capacity</span>
+                <span>{event.availableSeats} seats available</span>
               </div>
             </div>
           </div>
@@ -147,12 +145,12 @@ const EventDetails = () => {
           <div className="event-booking-section">
             <div className="availability-section">
               <h3 className="availability-title">Seat Availability</h3>
-              <div className={`availability-indicator ${getAvailabilityStatus(event.availableSeats, event.capacity)}`}>
+              <div className={`availability-indicator ${getAvailabilityStatus(event.availableSeats, event.availableSeats || 1)}`}>
                 <span className="seats-available">{event.availableSeats} seats available</span>
                 <div className="availability-bar">
                   <div
                     className="availability-fill"
-                    style={{ width: `${(event.availableSeats / event.capacity) * 100}%` }}
+                    style={{ width: `${(event.availableSeats / (event.availableSeats || 1)) * 100}%` }}
                   ></div>
                 </div>
               </div>
