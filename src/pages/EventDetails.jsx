@@ -4,16 +4,23 @@ import techConference from '../assets/tech-conference.jpg';
 import './EventDetails.css';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { FIND_EVENT_BY_ID } from '../api/api.js';
+import { CREATE_BOOKING, FIND_EVENT_BY_ID, VERIFY_PAYMENT } from '../api/api.js';
 import axios from 'axios';
 
 const EventDetails = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [token, setToken] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("jwtToken");
+    setToken(token);
+    console.log({
+      createBooking: CREATE_BOOKING,
+      verifyBooking: VERIFY_PAYMENT
+    })
     const fetchEvent = async () => {
       try {
         const res = await axios.get(`${FIND_EVENT_BY_ID}/${id}`, {
@@ -59,6 +66,67 @@ const EventDetails = () => {
       </div>
     );
   }
+
+  const handlePayment = async () => {
+    try {
+      // 1. Create order from backend
+      const res = await axios.post(
+        `${CREATE_BOOKING}/${event._id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true
+        }
+      );
+
+      const { order, key, bookingId } = res.data;
+
+      if (!order?.id) {
+        toast.error("Order creation failed!");
+        return;
+      }
+
+      // 2. Configure Razorpay Checkout
+      const options = {
+        key,
+        amount: order.amount, // already in paise
+        currency: order.currency,
+        name: event.title,
+        description: "Event Ticket Purchase",
+        order_id: order.id,
+        handler: async function (response) {
+          try {
+            // ✅ Verify payment with backend
+            await axios.post(
+              `${VERIFY_PAYMENT}/${id}`,
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                bookingId, // pass booking id too
+              },
+              {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+              }
+            );
+
+            toast.success("Payment successful!");
+            navigate("/");
+          } catch (err) {
+            console.error("Verify Error:", err.response?.data || err.message);
+            toast.error("Payment verification failed");
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error("Payment Error:", err.response?.data || err.message);
+      toast.error(err.response?.data?.message || "Payment failed");
+    }
+  };
 
   return (
     <div className="event-details-page">
@@ -151,9 +219,12 @@ const EventDetails = () => {
               <button
                 className="register-btn"
                 disabled={event.availableSeats === 0}
+                onClick={handlePayment}
               >
                 {event.availableSeats === 0 ? "Sold Out" : "Register for Event"}
               </button>
+
+
             </div>
           </div>
         </div>

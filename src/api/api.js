@@ -8,7 +8,11 @@ export const CHANGE_PASSWORD = `${URL}/api/users/changePassword`;
 export const CREATE_EVENT = `${URL}/api/events/createEvent`;
 export const UPDATE_EVENT = `${URL}/api/events/updateEvent`;
 export const DELETE = `${URL}/api/events/deleteEvent/:id`;
-export const CREATE_BOOKING = `${URL}/api/booking/createBooking/:id`;
+// export const CREATE_BOOKING = `${URL}/api/booking/createBooking/:id`;
 export const DELETE_BOOKING = `${URL}/api/booking/deleteBooking/:id`;
 export const ALL_EVENT = `${URL}/api/events/allEvent`;
 export const FIND_EVENT_BY_ID = `${URL}/api/events`;
+
+//local
+export const CREATE_BOOKING = `${URL}/api/booking/eventBooking`
+export const VERIFY_PAYMENT = `${URL}/api/booking/verifyPayment`
