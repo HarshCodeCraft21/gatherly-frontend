@@ -24,11 +24,12 @@ const EventDetails = () => {
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(null);
   const [registerBtn, setRegisterBtn] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // ✅ Check if user already registered
+  // ✅ Check user register
   const checkUserRegisterOrFail = async (Token) => {
     try {
       const res = await axios.get(`${CHECKISREGISTER}/${id}`, {
@@ -47,7 +48,7 @@ const EventDetails = () => {
     }
   };
 
-  // ✅ Fetch event & check register
+  // ✅ On mount: fetch event + check register + check expiry
   useEffect(() => {
     const Token = localStorage.getItem("JwtToken");
     if (!Token) {
@@ -62,8 +63,26 @@ const EventDetails = () => {
         const res = await axios.get(`${FIND_EVENT_BY_ID}/${id}`, {
           withCredentials: true,
         });
-        setEvent(res.data);
-        await checkUserRegisterOrFail(Token); // ✅ check after event fetch
+
+        const eventData = res.data;
+        setEvent(eventData);
+
+        const now = new Date();
+        const eventDateISO = eventData.date;
+        const eventTimeStr = eventData.time;
+
+        const eventDate = new Date(eventDateISO);
+        const eventDateStr = eventDate.toISOString().split("T")[0];
+        const eventDateTime = new Date(`${eventDateStr}T${eventTimeStr}:00`);
+
+        if (eventDateTime > now) {
+          setIsExpired(false);
+        } else {
+          toast.error("Event Expired")
+          setIsExpired(true);
+        }
+
+        await checkUserRegisterOrFail(Token);
       } catch (error) {
         toast.error(error.response?.data?.message || error.message);
       } finally {
@@ -85,6 +104,11 @@ const EventDetails = () => {
 
   // ✅ Payment Handler
   const handlePayment = async () => {
+    if (isExpired) {
+      toast.error("This event has already expired!");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${CREATE_BOOKING}/${event._id}`,
@@ -124,7 +148,7 @@ const EventDetails = () => {
                 withCredentials: true,
               }
             );
-            await checkUserRegisterOrFail(token); // ✅ refresh register status
+            await checkUserRegisterOrFail(token);
             toast.success("Payment successful!");
             navigate("/");
           } catch (err) {
@@ -242,7 +266,7 @@ const EventDetails = () => {
           </div>
 
           {/* Booking Section */}
-          <div className="event-booking-section">
+          <div className={isExpired ? "event-booking-section expired-event" : "event-booking-section"}>
             <div className="availability-section">
               <h3 className="availability-title">Seat Availability</h3>
               <div
@@ -258,9 +282,8 @@ const EventDetails = () => {
                   <div
                     className="availability-fill"
                     style={{
-                      width: `${
-                        (event.availableSeats / (event.totalSeats || 1)) * 100
-                      }%`,
+                      width: `${(event.availableSeats / (event.totalSeats || 1)) * 100
+                        }%`,
                     }}
                   ></div>
                 </div>
@@ -274,12 +297,23 @@ const EventDetails = () => {
               </div>
 
               <button
-                className={registerBtn ? "disable-btn" : "register-btn"}
-                disabled={registerBtn}
+                className={
+                  isExpired
+                    ? "expired-btn"
+                    : registerBtn
+                      ? "disable-btn"
+                      : "register-btn"
+                }
+                disabled={isExpired || registerBtn}
                 onClick={handlePayment}
               >
-                {registerBtn ? "Already Registered" : "Register Now"}
+                {isExpired
+                  ? "Event Expired"
+                  : registerBtn
+                    ? "Already Registered"
+                    : "Register Now"}
               </button>
+
             </div>
           </div>
         </div>

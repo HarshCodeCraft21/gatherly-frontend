@@ -286,6 +286,25 @@
 .register-btn:active {
   transform: translateY(0);
 }
+.expired-event {
+  border: 2px solid #ff4d4f;
+  background-color: #fff1f0;
+}
+
+.expired-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-glow);
+  background-color: #ff4d4f !important;
+  color: white !important;
+  cursor: not-allowed;
+}
 
 @media (max-width: 768px) {
   .event-details-page {

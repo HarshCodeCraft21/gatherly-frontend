@@ -94,7 +94,7 @@ const Events = () => {
                   </div>
                 </div>
 
-                <button className="register-btn" >Register Now</button>
+                <button className="register-btn" >More Details</button>
               </div>
             </div>
           ))}
