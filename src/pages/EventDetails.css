@@ -164,7 +164,7 @@
   font-size: 0.9rem;
 }
 
-.event-booking-section {
+.event-booking-section,.event-Joined-User {
   background: hsl(var(--card));
   padding: 2rem;
   border-radius: calc(var(--radius) * 2);
@@ -177,7 +177,7 @@
   margin-bottom: 2rem;
 }
 
-.availability-title {
+.availability-title,.Join-section {
   font-size: 1.2rem;
   font-weight: 600;
   color: hsl(var(--foreground));
@@ -255,7 +255,7 @@
 .register-btn {
   width: 100%;
   padding: 1rem 2rem;
-  background: var(--gradient-primary);
+  /* background: var(--gradient-primary); */
   color: hsl(var(--primary-foreground));
   border: none;
   border-radius: var(--radius);
@@ -265,7 +265,19 @@
   transition: var(--transition-smooth);
   box-shadow: var(--shadow-glow);
 }
-
+.disable-btn{
+  width: 100%;
+  padding: 1rem 2rem;
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow-glow);
+  background-color: green;
+  cursor:not-allowed;
+}
 .register-btn:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-glow), 0 10px 30px rgba(0,0,0,0.1);
