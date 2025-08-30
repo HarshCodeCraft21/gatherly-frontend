@@ -9,6 +9,7 @@ import Footer from "./components/Footer/Footer";
 import ChangePassword from './pages/changePassword';
 import Cookies from 'js-cookie';
 import ScrollToTop from './components/ScrollTop/ScrollToTop'
+import UserProfile from "./components/UserProfile";
 // ✅ Lazy load pages/components
 const Home = lazy(() => import("./pages/Home"));
 const EventsPage = lazy(() => import("./pages/EventsPage"));
@@ -72,6 +73,12 @@ const App: React.FC = () => {
                 path="/change-password"
                 element={
                   verifyToken ? <ChangePassword /> : <Navigate to='/login' replace />
+                }
+              />
+              <Route 
+                path="/user-profile"
+                element={
+                  verifyToken ? <UserProfile /> : <Navigate to='/login' replace />
                 }
               />
               <Route path="*" element={<NotFound />} />

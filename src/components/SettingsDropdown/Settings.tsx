@@ -68,7 +68,7 @@ const SettingsDropdown = () => {
     {
       label: "User Profile",
       icon: <User className="w-5 h-5 text-purple-500" />,
-      onClick: () => alert("User Profile clicked"),
+      onClick: () => navigate('/user-profile'),
     },
     {
       label: "Change Password",
