@@ -40,7 +40,7 @@ const SettingsDropdown = () => {
   // Logout
   const clearToken = useCallback(() => {
     if (confirm("Are you sure you want to Logout?")) {
-      localStorage.clear();
+      localStorage.removeItem("JwtToken");
       Cookies.remove("JwtToken");
       toast.success("You logged out successfully");
       window.location.reload();
