@@ -35,7 +35,13 @@ const Events = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div className="events-section">Loading...</div>;
+  if (loading)
+    return (
+      <div className="events-section spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
+
   return (
     <div className="events-section">
       <div className="events-container">

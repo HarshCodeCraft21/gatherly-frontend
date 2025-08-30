@@ -1,26 +1,31 @@
 .create-event-page {
   min-height: 100vh;
   background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--accent)) 100%);
-  padding: 2rem 0;
+  padding: clamp(1rem, 5vw, 2rem) 0;
   transition: background 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .create-event-container {
-  max-width: 1000px;
+  max-width: clamp(320px, 90vw, 1000px);
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 clamp(1rem, 5vw, 2rem);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .create-event-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: clamp(1.5rem, 4vw, 3rem);
 }
 
 .create-event-title {
-  font-size: 3rem;
+  font-size: clamp(1.8rem, 6vw, 3rem);
   font-weight: 800;
   color: hsl(var(--foreground));
-  margin: 2.5rem 0;
+  margin: clamp(1.5rem, 3vw, 2.5rem) 0;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -29,41 +34,28 @@
 }
 
 .create-event-subtitle {
-  font-size: 1.2rem;
+  font-size: clamp(0.9rem, 3vw, 1.2rem);
   color: hsl(var(--muted-foreground));
-  max-width: 600px;
+  max-width: min(600px, 90%);
   margin: 0 auto;
+  line-height: 1.5;
 }
 
 .create-event-form {
   background: hsl(var(--card));
   border-radius: calc(var(--radius) * 2);
-  padding: 2.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
   box-shadow: var(--shadow-card);
   border: 1px solid hsl(var(--border));
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  margin-bottom: 2rem;
-}
-
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: hsl(var(--foreground));
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid hsl(var(--border));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(1rem, 3vw, 2rem);
+  margin-bottom: clamp(1rem, 3vw, 2rem);
 }
 
 .form-group {
@@ -78,7 +70,7 @@
   gap: 0.5rem;
   font-weight: 600;
   color: hsl(var(--foreground));
-  font-size: 0.95rem;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
 }
 
 .label-icon {
@@ -89,22 +81,26 @@
 
 .form-input,
 .form-textarea,
-.form-select {
-  padding: 0.875rem;
+.form-select,
+.form-file-input {
+  padding: clamp(0.75rem, 2vw, 0.875rem);
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   transition: var(--transition-smooth);
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .form-input:focus,
 .form-textarea:focus,
-.form-select:focus {
+.form-select:focus,
+.form-file-input:focus {
   outline: none;
   border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary)/0.1);
+  box-shadow: 0 0 0 3px hsl(var(--primary)/0.2);
 }
 
 .form-textarea {
@@ -113,18 +109,9 @@
   font-family: inherit;
 }
 
-.form-select {
-  cursor: pointer;
-}
-
 .form-file-input {
-  padding: 0.875rem;
   border: 2px dashed hsl(var(--border));
-  border-radius: var(--radius);
   background: hsl(var(--accent));
-  color: hsl(var(--foreground));
-  font-size: 1rem;
-  transition: var(--transition-smooth);
   cursor: pointer;
 }
 
@@ -133,8 +120,18 @@
   background: hsl(var(--primary)/0.05);
 }
 
+.banner-preview {
+  display: block;
+  margin-top: 0.75rem;
+  max-width: 100%;
+  max-height: clamp(150px, 40vw, 200px);
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
 .file-input-note {
-  font-size: 0.85rem;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   color: hsl(var(--muted-foreground));
   margin-top: 0.25rem;
 }
@@ -142,21 +139,22 @@
 .form-actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  padding-top: 2rem;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  padding-top: clamp(1.5rem, 3vw, 2rem);
   border-top: 1px solid hsl(var(--border));
-  transition: all 0.3s ease;
+  flex-wrap: wrap;
 }
 
 .cancel-btn,
 .create-btn {
-  padding: 0.875rem 2rem;
+  padding: clamp(0.75rem, 2vw, 0.875rem) clamp(1.5rem, 4vw, 2rem);
   border-radius: var(--radius);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
   cursor: pointer;
+  min-width: clamp(100px, 30vw, 120px);
   transition: all 0.3s ease;
-  min-width: 120px;
+  touch-action: manipulation; /* Improves touch responsiveness */
 }
 
 .cancel-btn {
@@ -182,182 +180,119 @@
   box-shadow: var(--shadow-glow), 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.create-btn:active,
-.cancel-btn:active {
-  transform: translateY(0);
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #6c63ff;
+  border-radius: 50%;
+  width: clamp(16px, 5vw, 20px);
+  height: clamp(16px, 5vw, 20px);
+  animation: spin 1s linear infinite;
 }
 
-/* Modern Time Picker Styling */
-.time-picker-wrapper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
+/* Time picker */
 .time-picker-input {
   width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: clamp(0.65rem, 2vw, 0.75rem) clamp(0.85rem, 2.5vw, 1rem);
   border-radius: var(--radius);
-  border: none !important; /* Forcefully remove border */
+  border:1px solid var(--border);
   background: hsl(var(--card));
   color: hsl(var(--foreground));
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  position: relative;
-  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  display: flex!important;
+  align-items: center!important;
+  justify-content: center!important;
+  gap: 0.5rem!important;
+  box-shadow: 0 0 0 1px hsl(var(--border));
 }
 
-.time-picker-input .react-time-picker__wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  border: none !important; /* Remove border from wrapper */
+.react-time-picker__wrapper,
+.react-time-picker__inputGroup,
+.react-time-picker__inputGroup__input,
+.react-time-picker__inputGroup__amPm {
+  border:none !important;
 }
-
-.time-picker-input .react-time-picker__inputGroup {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  border: none !important; /* Remove border from input group */
+.react-time-picker__inputGroup{
+  display:flex!important;
+  align-items: center!important;
+  gap:0.5rem!important;
 }
-
-.time-picker-input .react-time-picker__inputGroup__input {
-  padding: 0.65rem;
-  border-radius: var(--radius);
-  border: none !important; /* Remove border from individual inputs */
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
-  text-align: center;
-  width: 3.5rem;
-  font-size: 1rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
+.react-time-picker__inputGroup__input,.react-time-picker__inputGroup__amPm{
+  /* position: relative!important; */
+  /* bottom: 6px!important; */
+  border:1px solid var(--border)!important;
+  background: none!important;
+  padding:5px 10px!important;
 }
-
-.time-picker-input .react-time-picker__inputGroup__divider {
-  padding: 0.65rem 0;
-  font-size: 1rem;
-  color: hsl(var(--foreground));
-}
-
-.time-picker-input .react-time-picker__inputGroup__amPm {
-  padding: 0.65rem;
-  border-radius: var(--radius);
-  border: none !important; /* Remove border from AM/PM */
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  cursor: pointer;
-  font-size: 0.9rem;
-  width: 4rem;
-  text-align: center;
-  transition: all 0.2s ease;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='hsl(var(--foreground))' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 0.7rem center;
-  background-size: 0.8rem;
-  box-shadow: 0 0 0 1px hsl(var(--border)); /* Subtle light outline */
-}
-
-.time-picker-input:focus-within,
-.time-picker-input .react-time-picker__inputGroup__input:focus,
-.time-picker-input .react-time-picker__inputGroup__amPm:focus {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 3px hsl(var(--primary)/0.1);
-  outline: none;
-}
-
-.time-picker-input:hover {
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 5px hsl(var(--primary)/0.15);
-}
-
-.time-picker-input .react-time-picker__inputGroup__amPm:hover {
-  border-color: hsl(var(--primary));
-  background: hsl(var(--primary)/0.05);
-}
-
-/* Clock icon button */
-.react-time-picker__clock-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  margin-left: 0.5rem;
-  color: hsl(var(--primary));
-  font-size: 1.1rem;
-  transition: color 0.3s ease;
-}
-
-.react-time-picker__clock-button:hover {
-  color: hsl(var(--accent));
-}
-
-/* Disabled state */
-.time-picker-input:disabled,
-.react-time-picker__inputGroup__input:disabled,
-.react-time-picker__inputGroup__amPm:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* Clock popup */
-.react-time-picker__clock {
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--card));
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .time-picker-input {
-    padding: 0.65rem 0.8rem;
-  }
-
-  .react-time-picker__inputGroup__input {
-    width: 2.5rem;
-    padding: 0.5rem;
-  }
-
-  .react-time-picker__inputGroup__amPm {
-    padding: 0.5rem;
+/* Media Queries */
+@media (max-width: 1024px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 3vw, 1.5rem);
   }
 }
 
 @media (max-width: 768px) {
   .create-event-page {
-    padding: 1rem 0;
+    padding: clamp(0.75rem, 3vw, 1rem) 0;
   }
-
   .create-event-container {
-    padding: 0 1rem;
+    padding: 0 clamp(0.75rem, 3vw, 1rem);
   }
-
   .create-event-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.5rem, 5vw, 2rem);
   }
-
   .create-event-form {
-    padding: 1.5rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
   }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
   .form-actions {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
+    gap: 1rem;
   }
-
   .cancel-btn,
   .create-btn {
     width: 100%;
-    max-width: 300px;
+    max-width: 100%;
+  }
+  .banner-preview {
+    max-height: clamp(120px, 35vw, 180px);
+  }
+}
+
+@media (max-width: 480px) {
+  .create-event-title {
+    font-size: clamp(1.25rem, 4.5vw, 1.8rem);
+  }
+  .create-event-subtitle {
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+  }
+  .form-input,
+  .form-textarea,
+  .form-select,
+  .form-file-input {
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  }
+  .form-label {
+    font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+  }
+  .time-picker-input {
+    font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  }
+}
+
+@media (min-width: 1200px) {
+  .create-event-container {
+    max-width: 1100px;
+  }
+  .create-event-title {
+    font-size: clamp(2.5rem, 3vw, 3.5rem);
+  }
+  .create-event-form {
+    padding: clamp(2rem, 3vw, 3rem);
   }
 }

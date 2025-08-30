@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, MapPin, Users, DollarSign, FileText, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, DollarSign, FileText, Clock, UploadIcon } from 'lucide-react';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
-import './CreateEvent.css';
+
 import { CREATE_EVENT } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import './CreateEvent.css'
 const CreateEvent = () => {
   const navigate = useNavigate();
 
@@ -17,12 +17,15 @@ const CreateEvent = () => {
     title: '',
     description: '',
     venue: '',
-    price: 0 || null,
-    capacity: 0 || null,
+    price: 0,
+    capacity: 0,
     date: '',
     time: '',
-    category: ''
+    category: '',
+    banner: '',
   });
+  const [bannerPreview, setBannerPreview] = useState(null); // live preview
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!Cookies.get("JwtToken")) {
@@ -36,7 +39,6 @@ const CreateEvent = () => {
     let val = type === "number" ? (value === "" ? 0 : Number(value)) : value;
     setFormData(prev => {
       const newState = { ...prev, [name]: val };
-      // Sync availableSeats with capacity
       if (name === "capacity") newState.availableSeats = val;
       return newState;
     });
@@ -44,28 +46,48 @@ const CreateEvent = () => {
 
   const handleTimeChange = (value) => setFormData(prev => ({ ...prev, time: value }));
 
+  // Banner image upload with live preview and validation
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const validTypes = ["image/jpeg", "image/png"];
+      if (!validTypes.includes(file.type)) {
+        toast.error("Only JPG and PNG images are allowed");
+        e.target.value = null;
+        return;
+      }
+      if (file.size > 3 * 1024 * 1024) { // 3MB limit
+        toast.error("Image size must be less than 3MB");
+        e.target.value = null;
+        return;
+      }
+      setFormData(prev => ({ ...prev, banner: file }));
+      setBannerPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const token = Cookies.get("JwtToken");
 
-    // Ensure numeric fields are numbers
-    const payload = {
-      ...formData,
-      price: Number(formData.price),
-      capacity: Number(formData.capacity),
-      availableSeats: Number(formData.availableSeats)
-    };
+    const payload = new FormData();
+    for (const key in formData) {
+      if (formData[key] !== null) payload.append(key, formData[key]);
+    }
 
     try {
       const res = await axios.post(CREATE_EVENT, payload, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         withCredentials: true
       });
       toast.success(res.data.message || "Event created successfully!");
-      navigate('/events');
+      navigate('/user-profile');
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Something went wrong, try again later");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,53 +95,40 @@ const CreateEvent = () => {
     { name: "title", label: "Event Title", icon: <FileText className="label-icon" />, type: "text", placeholder: "Enter event title" },
     { name: "description", label: "Description", icon: <FileText className="label-icon" />, type: "textarea", placeholder: "Describe your event in detail", rows: 4 },
     { name: "date", label: "Event Date", icon: <Calendar className="label-icon" />, type: "date" },
-    { name: "category", label: "Category", icon: <FileText className="label-icon" />, type: "select", options: ["Technology","Business","Education","Health & Fitness","Arts & Culture","Sports","Entertainment","Finance","Lifestyle"] },
+    { name: "category", label: "Category", icon: <FileText className="label-icon" />, type: "select", options: ["Technology", "Business", "Education", "Health & Fitness", "Arts & Culture", "Sports", "Entertainment", "Finance", "Lifestyle"] },
     { name: "venue", label: "Venue", icon: <MapPin className="label-icon" />, type: "text", placeholder: "Enter venue location" },
     { name: "price", label: "Ticket Price ($)", icon: <DollarSign className="label-icon" />, type: "number", placeholder: "0", min: 0, step: 0.01 },
-    { name: "capacity", label: "Total Capacity", icon: <Users className="label-icon" />, type: "number", placeholder: "0", min: 1 }
+    { name: "capacity", label: "Total Capacity", icon: <Users className="label-icon" />, type: "number", placeholder: "0", min: 1 },
+    { name: "banner", label: "Upload Banner", icon: <UploadIcon className='label-icon' />, type: "file" }
   ];
 
   const renderField = (field) => {
     switch (field.type) {
       case "textarea":
-        return (
-          <textarea
-            name={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            placeholder={field.placeholder}
-            rows={field.rows}
-            className="form-textarea"
-            required
-          />
-        );
+        return <textarea name={field.name} value={formData[field.name]} onChange={handleChange} placeholder={field.placeholder} rows={field.rows} className="form-textarea" required />;
       case "select":
         return (
-          <select
-            name={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            className="form-select"
-            required
-          >
+          <select name={field.name} value={formData[field.name]} onChange={handleChange} className="form-select" required>
             <option value="">Select a category</option>
             {field.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
           </select>
         );
-      default:
+      case "file":
         return (
-          <input
-            type={field.type}
-            name={field.name}
-            value={formData[field.name]}
-            onChange={handleChange}
-            placeholder={field.placeholder}
-            min={field.min}
-            step={field.step}
-            className="form-input"
-            required
-          />
+          <>
+            <input
+              type="file"
+              name={field.name}
+              onChange={handleBannerChange}
+              accept="image/jpeg,image/png"
+              className="form-input"
+              required
+            />
+            {bannerPreview && <img src={bannerPreview} alt="Banner Preview" className="banner-preview" />}
+          </>
         );
+      default:
+        return <input type={field.type} name={field.name} value={formData[field.name]} onChange={handleChange} placeholder={field.placeholder} min={field.min} step={field.step} className="form-input" required />;
     }
   };
 
@@ -142,22 +151,15 @@ const CreateEvent = () => {
 
             <div className="form-group">
               <label className="form-label"><Clock className="label-icon" /> Event Time</label>
-              <TimePicker
-                onChange={handleTimeChange}
-                value={formData.time}
-                disableClock
-                format="hh:mm a"
-                clearIcon={null}
-                clockIcon={<Clock size={20} />}
-                className="time-picker-input"
-                required
-              />
+              <TimePicker onChange={handleTimeChange} value={formData.time} disableClock format="hh:mm a" clearIcon={null} clockIcon={<Clock size={20} />} className="time-picker-input" required />
             </div>
           </div>
 
           <div className="form-actions">
             <button type="button" onClick={() => navigate('/events')} className="cancel-btn">Cancel</button>
-            <button type="submit" className="create-btn">Create Event</button>
+            <button type="submit" className="create-btn" disabled={loading}>
+              {loading ? <div className="spinner"></div> : "Create Event"}
+            </button>
           </div>
         </form>
       </div>
