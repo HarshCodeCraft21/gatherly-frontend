@@ -26,7 +26,7 @@ const EventDetails = () => {
   const [token, setToken] = useState(null);
   const [registerBtn, setRegisterBtn] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
-  const [users , setUsers] = useState(null);
+  const [users, setUsers] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -52,13 +52,16 @@ const EventDetails = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${USER_LIST}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         withCredentials: true
       });
       setUsers(res.data.userDetails);
       setLoading(false)
     } catch (error) {
       toast.error("failed to fetch all registerd user")
-    }finally{
+    } finally {
       setLoading(false);
     }
   }
