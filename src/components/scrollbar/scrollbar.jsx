@@ -4,7 +4,7 @@ import { USER_LIST } from '../../api/api.js';
 import axios from 'axios';
 
 export const ScrollBar = ({ id, event }) => {
-  const [userData, setUserData] = useState({ userInfo: 0, eventCapacity: 1 });
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -23,18 +23,21 @@ export const ScrollBar = ({ id, event }) => {
     fetchUserId();
   }, [id, event.capacity]);
 
-  // Calculate percentage
-  const percentage = Math.min(
+  // Correct calculation
+  const joinedPercentage = Math.min(
     (userData.userInfo / userData.eventCapacity) * 100,
     100
   );
+  const emptyPercentage = 100 - joinedPercentage;
+
+  console.log("Empty %:", emptyPercentage);
 
   return (
     <div className="scrollbar-container">
       <div className="scrollbar-track">
         <div
-          className="scrollbar-fill"
-          style={{ width: `${percentage}%` }}
+          className="scrollbar-empty"
+          style={{ width: `${emptyPercentage}%` }}
         ></div>
       </div>
       <div className="scrollbar-text">
