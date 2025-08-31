@@ -1,12 +1,13 @@
+import "./EventDetails.css";
 import { useParams, useNavigate } from "react-router-dom";
 import { Calendar, MapPin, Users, ArrowLeft, Clock, IndianRupee } from "lucide-react";
 import techConference from "../assets/tech-conference.jpg";
-import "./EventDetails.css";
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { CREATE_BOOKING, FIND_EVENT_BY_ID, VERIFY_PAYMENT, CHECKISREGISTER, USER_LIST } from "../api/api.js";
 import axios from "axios";
 import { MultiUserCard } from "../components/MultiUserCard";
+import { ScrollBar } from "../components/scrollbar/scrollbar.jsx";
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -38,7 +39,7 @@ const EventDetails = () => {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      setUsers(res.data.userDetails || []);
+      setUsers(res.data || []);
     } catch {
       toast.error("Failed to fetch registered users");
     }
@@ -73,14 +74,6 @@ const EventDetails = () => {
     fetchEvent();
   }, [fetchEvent, token, navigate]);
 
-  const getAvailabilityStatus = (available, total) => {
-    if (!total) return "low";
-    const percentage = (available / total) * 100;
-    if (percentage > 50) return "high";
-    if (percentage > 20) return "medium";
-    return "low";
-  };
-
   const handlePayment = async () => {
     if (isExpired) return toast.error("This event has already expired!");
 
@@ -111,7 +104,7 @@ const EventDetails = () => {
 
             await checkUserRegister(token);
             toast.success("Payment successful!");
-            navigate("/");
+            navigate("/user-profile");
           } catch {
             toast.error("Payment verification failed");
           }
@@ -146,7 +139,7 @@ const EventDetails = () => {
             <MetaItem Icon={Clock} value={new Date(`1970-01-01T${event.time}`).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit",hour12:true})} />
             <MetaItem Icon={MapPin} value={event.venue} />
             <MetaItem Icon={IndianRupee} value={`${event.price}/-`} />
-            <MetaItem Icon={Users} value={`${event.availableSeats} / ${event.totalSeats || "?"} seats available`} />
+            <MetaItem Icon={Users} value={`${users.total} / ${event.capacity} seats available`} />
           </div>
         </div>
       </div>
@@ -157,21 +150,16 @@ const EventDetails = () => {
           <p>{event.description}</p>
         </section>
 
-        <MultiUserCard users={users} />
+        <MultiUserCard users={users.userDetails} />
 
         <div className={`event-booking-section ${isExpired ? "expired-event" : ""}`}>
           <div className="availability-section">
             <h3>Seat Availability</h3>
-            <div className={`availability-indicator ${getAvailabilityStatus(event.availableSeats, event.totalSeats || 1)}`}>
-              <span>{event.availableSeats} seats available</span>
-              <div className="availability-bar">
-                <div className="availability-fill" style={{ width: `${(event.availableSeats / (event.totalSeats || 1)) * 100}%` }}></div>
-              </div>
-            </div>
+            <ScrollBar id={id} event={event}/>
           </div>
 
           <div className="pricing-section">
-            <div className="price-display">
+            <div className="price-display flex flex-col">
               <span>Ticket Price</span>
               <span>₹{event.price}</span>
             </div>

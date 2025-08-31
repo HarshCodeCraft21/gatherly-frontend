@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import techConference from '../../assets/tech-conference.jpg'; // fallback image
 import './Events.css';
+import { ScrollBar } from '../scrollbar/scrollbar.jsx';
 
 const Events = () => {
   const navigate = useNavigate();
@@ -87,24 +88,6 @@ const Events = () => {
                         <span>{e.capacity} capacity</span>
                       </div>
                     </div>
-
-                    <div className="event-availability">
-                      <div
-                        className={`availability-indicator ${getAvailabilityStatus(
-                          e.availableSeats,
-                          e.capacity
-                        )}`}
-                      >
-                        <span className="seats-available">{e.availableSeats} seats available</span>
-                        <div className="availability-bar">
-                          <div
-                            className="availability-fill"
-                            style={{ width: `${(e.availableSeats / e.capacity) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-
                     <button className="register-btn" >More Details</button>
                   </div>
                 </div>
