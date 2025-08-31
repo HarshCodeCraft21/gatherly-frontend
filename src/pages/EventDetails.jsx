@@ -16,16 +16,17 @@ import {
   FIND_EVENT_BY_ID,
   VERIFY_PAYMENT,
   CHECKISREGISTER,
+  USER_LIST
 } from "../api/api.js";
 import axios from "axios";
-
+import { MultiUserCard } from "../components/MultiUserCard";
 const EventDetails = () => {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState(null);
   const [registerBtn, setRegisterBtn] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
-
+  const [users , setUsers] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -47,7 +48,20 @@ const EventDetails = () => {
       setRegisterBtn(false);
     }
   };
-
+  const fetchAllUser = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${USER_LIST}/${id}`, {
+        withCredentials: true
+      });
+      setUsers(res.data.userDetails);
+      setLoading(false)
+    } catch (error) {
+      toast.error("failed to fetch all registerd user")
+    }finally{
+      setLoading(false);
+    }
+  }
   // ✅ On mount: fetch event + check register + check expiry
   useEffect(() => {
     const Token = localStorage.getItem("JwtToken");
@@ -57,7 +71,7 @@ const EventDetails = () => {
       return;
     }
     setToken(Token);
-
+    fetchAllUser();
     const fetchEvent = async () => {
       try {
         const res = await axios.get(`${FIND_EVENT_BY_ID}/${id}`, {
@@ -201,7 +215,7 @@ const EventDetails = () => {
         {/* Hero Section */}
         <div className="event-details-hero">
           <div className="event-hero-image">
-            <img src={event.image || techConference} alt={event.title} />
+            <img src={event.banner ? event.banner : techConference} alt={event.title} />
             <div className="event-hero-category">
               {event.category || "General"}
             </div>
@@ -264,6 +278,15 @@ const EventDetails = () => {
             <h2 className="section-title">About This Event</h2>
             <p className="event-description">{event.description}</p>
           </div>
+          {/*Registered User */}
+          <div class="user-management-page">
+            <div class="user-management-container">
+              <div class="user-cards-wrapper">
+                <MultiUserCard users={users}></MultiUserCard>
+              </div>
+            </div>
+          </div>
+
 
           {/* Booking Section */}
           <div className={isExpired ? "event-booking-section expired-event" : "event-booking-section"}>

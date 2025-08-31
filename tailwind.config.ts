@@ -62,7 +62,11 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				"avatar-primary": "#4f46e5",
+				"avatar-secondary": "#ec4899",
+				"avatar-tertiary": "#f59e0b",
+				"avatar-quaternary": "#10b981",
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -90,7 +94,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

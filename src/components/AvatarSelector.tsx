@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,12 +29,26 @@ const avatarOptions = [
   { id: 9, src: avatar9, alt: "Professional with red hair" },
   { id: 10, src: avatar10, alt: "Senior professional man" },
 ];
-
+const avatarColors = [
+  "bg-avatar-primary",
+  "bg-avatar-secondary",
+  "bg-avatar-tertiary",
+  "bg-avatar-quaternary",
+];
 interface AvatarSelectorProps {
   currentAvatar: string;
   onAvatarSelect: (avatar: string) => void;
 }
-
+interface UserAvatarProps {
+  username: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}
+const sizeClasses = {
+  sm: "w-8 h-8 text-sm",
+  md: "w-12 h-12 text-lg",
+  lg: "w-16 h-16 text-xl",
+};
 const AvatarSelector = ({ currentAvatar, onAvatarSelect }: AvatarSelectorProps) => {
   const [open, setOpen] = useState(false);
 
@@ -62,11 +77,10 @@ const AvatarSelector = ({ currentAvatar, onAvatarSelect }: AvatarSelectorProps) 
             <button
               key={avatar.id}
               onClick={() => handleAvatarSelect(avatar.src)}
-              className={`relative rounded-full transition-all hover:scale-105 ${
-                currentAvatar === avatar.src
+              className={`relative rounded-full transition-all hover:scale-105 ${currentAvatar === avatar.src
                   ? "ring-4 ring-purple-primary"
                   : "hover:ring-2 hover:ring-purple-primary/50"
-              }`}
+                }`}
             >
               <Avatar className="h-16 w-16">
                 <AvatarImage src={avatar.src} alt={avatar.alt} />
@@ -78,5 +92,24 @@ const AvatarSelector = ({ currentAvatar, onAvatarSelect }: AvatarSelectorProps) 
     </Dialog>
   );
 };
+export function UserAvatar({ username, size = "md", className }: UserAvatarProps) {
+  const firstLetter = username.charAt(0).toUpperCase();
 
+  // Simple hash function to consistently pick color based on username
+  const colorIndex = username.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % avatarColors.length;
+  const avatarColor = avatarColors[colorIndex];
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-center rounded-full font-semibold text-white shadow-sm",
+        avatarColor,
+        sizeClasses[size],
+        className
+      )}
+    >
+      {firstLetter}
+    </div>
+  );
+}
 export default AvatarSelector;

@@ -54,7 +54,7 @@ const Events = () => {
               style={{ cursor: 'pointer' }}
             >
               <div className="event-image">
-                <img src={techConference} alt={e.title} />
+                <img src={e.banner ? e.banner : techConference} alt={e.title} />
                 <div className="event-category">{e.category || "General"}</div>
               </div>
 

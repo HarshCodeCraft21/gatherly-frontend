@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './CreateEvent.css'
+
 const CreateEvent = () => {
   const navigate = useNavigate();
 
@@ -22,9 +23,9 @@ const CreateEvent = () => {
     date: '',
     time: '',
     category: '',
-    banner: '',
+    banner: null,
   });
-  const [bannerPreview, setBannerPreview] = useState(null); // live preview
+  const [bannerPreview, setBannerPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -37,16 +38,11 @@ const CreateEvent = () => {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     let val = type === "number" ? (value === "" ? 0 : Number(value)) : value;
-    setFormData(prev => {
-      const newState = { ...prev, [name]: val };
-      if (name === "capacity") newState.availableSeats = val;
-      return newState;
-    });
+    setFormData(prev => ({ ...prev, [name]: val }));
   };
 
   const handleTimeChange = (value) => setFormData(prev => ({ ...prev, time: value }));
 
-  // Banner image upload with live preview and validation
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -56,7 +52,7 @@ const CreateEvent = () => {
         e.target.value = null;
         return;
       }
-      if (file.size > 3 * 1024 * 1024) { // 3MB limit
+      if (file.size > 3 * 1024 * 1024) {
         toast.error("Image size must be less than 3MB");
         e.target.value = null;
         return;
@@ -66,15 +62,34 @@ const CreateEvent = () => {
     }
   };
 
+  // Convert 12-hour to 24-hour format for backend
+  const formatTime24 = (time) => {
+    if (!time) return '';
+    const [h, m, period] = time.split(/[: ]/);
+    let hour = Number(h);
+    if (period === 'PM' && hour < 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+    return `${hour.toString().padStart(2,'0')}:${m}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token = Cookies.get("JwtToken");
 
+    const token = Cookies.get("JwtToken");
     const payload = new FormData();
+
     for (const key in formData) {
-      if (formData[key] !== null) payload.append(key, formData[key]);
+      if (formData[key] !== null && formData[key] !== '' && formData[key] !== undefined) {
+        if (key === "time") {
+          payload.append(key, formatTime24(formData[key]));
+        } else {
+          payload.append(key, formData[key]);
+        }
+      }
     }
+
+    console.log("FormData entries:", [...payload]); // Debug log
 
     try {
       const res = await axios.post(CREATE_EVENT, payload, {
@@ -151,7 +166,16 @@ const CreateEvent = () => {
 
             <div className="form-group">
               <label className="form-label"><Clock className="label-icon" /> Event Time</label>
-              <TimePicker onChange={handleTimeChange} value={formData.time} disableClock format="hh:mm a" clearIcon={null} clockIcon={<Clock size={20} />} className="time-picker-input" required />
+              <TimePicker
+                onChange={handleTimeChange}
+                value={formData.time}
+                disableClock
+                format="hh:mm a"
+                clearIcon={null}
+                clockIcon={<Clock size={20} />}
+                className="time-picker-input"
+                required
+              />
             </div>
           </div>
 
