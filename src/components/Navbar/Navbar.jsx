@@ -1,7 +1,7 @@
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Calendar, Menu, X, Mail } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import SettingsDropdown from "../SettingsDropdown/Settings";
@@ -9,7 +9,7 @@ import SettingsDropdown from "../SettingsDropdown/Settings";
 const Navbar = ({ verifyToken }) => {
   const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  const menuRef = useRef(null); // ref for menu container
   const navigate = useNavigate();
 
   // Decode token when available
@@ -21,6 +21,25 @@ const Navbar = ({ verifyToken }) => {
       toast.error("Invalid token");
     }
   }, [verifyToken]);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // Close mobile menu on link click
   const handleCloseMenu = () => setIsOpen(false);
@@ -40,7 +59,10 @@ const Navbar = ({ verifyToken }) => {
         </button>
 
         {/* Navigation */}
-        <div className={`navbar-nav ${isOpen ? "active" : ""}`}>
+        <div
+          ref={menuRef}
+          className={`navbar-nav ${isOpen ? "active" : ""}`}
+        >
           <Link to="/" className="nav-link" onClick={handleCloseMenu}>
             Home
           </Link>
