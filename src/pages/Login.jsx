@@ -45,7 +45,7 @@ const Login = () => {
       window.location.reload();
 
     } catch (error) {
-      toast.error(error.response?.data?.message || error.message);
+      toast.error("Invalid Credentials");
     } finally {
       setIsLoading(false);
     }

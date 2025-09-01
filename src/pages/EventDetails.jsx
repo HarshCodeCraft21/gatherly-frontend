@@ -8,7 +8,7 @@ import { CREATE_BOOKING, FIND_EVENT_BY_ID, VERIFY_PAYMENT, CHECKISREGISTER, USER
 import axios from "axios";
 import { MultiUserCard } from "../components/MultiUserCard";
 import { ScrollBar } from "../components/scrollbar/scrollbar.jsx";
-
+import { jwtDecode } from 'jwt-decode';
 const EventDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const EventDetails = () => {
   const [registerBtn, setRegisterBtn] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
   const [users, setUsers] = useState([]);
-
+  const [role, setRole] = useState(null);
   const checkUserRegister = useCallback(async (Token) => {
     try {
       const res = await axios.get(`${CHECKISREGISTER}/${id}`, {
@@ -71,6 +71,11 @@ const EventDetails = () => {
       navigate("/login");
       return;
     }
+    let eventRole = jwtDecode(token);
+    if (!eventRole) {
+      return toast("something went wrong");
+    }
+    setRole(eventRole.role);
     fetchEvent();
   }, [fetchEvent, token, navigate]);
 
@@ -129,14 +134,14 @@ const EventDetails = () => {
       <button onClick={() => navigate("/events")} className="back-btn"><ArrowLeft size={20} /> Back to Events</button>
 
       <div className="event-details-hero">
-        <img src={event.banner || techConference} alt={event.title} className="event-hero-image"/>
+        <img src={event.banner || techConference} alt={event.title} className="event-hero-image" />
         <div className="event-hero-category">{event.category || "General"}</div>
 
         <div className="event-hero-content">
           <h1>{event.title}</h1>
           <div className="event-details-meta">
             <MetaItem Icon={Calendar} value={new Date(event.date).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "long", year: "numeric" })} />
-            <MetaItem Icon={Clock} value={new Date(`1970-01-01T${event.time}`).toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit",hour12:true})} />
+            <MetaItem Icon={Clock} value={new Date(`1970-01-01T${event.time}`).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true })} />
             <MetaItem Icon={MapPin} value={event.venue} />
             <MetaItem Icon={IndianRupee} value={`${event.price}/-`} />
             <MetaItem Icon={Users} value={`${users.total} / ${event.capacity} seats available`} />
@@ -155,7 +160,7 @@ const EventDetails = () => {
         <div className={`event-booking-section ${isExpired ? "expired-event" : ""}`}>
           <div className="availability-section">
             <h3>Seat Availability</h3>
-            <ScrollBar id={id} event={event}/>
+            <ScrollBar id={id} event={event} />
           </div>
 
           <div className="pricing-section">
@@ -165,12 +170,25 @@ const EventDetails = () => {
             </div>
 
             <button
-              className={isExpired ? "expired-btn" : registerBtn ? "disable-btn" : "register-btn"}
-              disabled={isExpired || registerBtn}
+              className={
+                isExpired
+                  ? "expired-btn"
+                  : registerBtn || role === "admin"
+                    ? "disable-btn"
+                    : "register-btn"
+              }
+              disabled={isExpired || registerBtn || role === "admin"}
               onClick={handlePayment}
             >
-              {isExpired ? "Event Expired" : registerBtn ? "Already Registered" : "Register Now"}
+              {isExpired
+                ? "Event Expired"
+                : registerBtn
+                  ? "Already Registered"
+                  : role === "admin"
+                    ? "Admin Cannot Register"
+                    : "Register Now"}
             </button>
+
           </div>
         </div>
       </div>
