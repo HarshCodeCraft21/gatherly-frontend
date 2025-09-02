@@ -271,7 +271,7 @@ const UserProfile = () => {
                                                     size="sm"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        navigate('/update-event');
+                                                        navigate(`/update-event/${event._id}`)
                                                     }}
                                                 >
                                                     {editingEvent_id === event._id ? (

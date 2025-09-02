@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, FileText, Clock, UploadIcon, IndianRupee } from 'lucide-react';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
 
-import { CREATE_EVENT } from '../api/api.js';
+import { UPDATE_EVENT, FIND_EVENT_BY_ID } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import './CreateEvent.css'
 
 const UpdateEvent = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -27,12 +27,41 @@ const UpdateEvent = () => {
   });
   const [bannerPreview, setBannerPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const formatDateForUI = (isoDate) => {
+    const date = new Date(isoDate);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
   useEffect(() => {
     if (!Cookies.get("JwtToken")) {
       toast.error("Please login first");
       navigate("/login");
     }
+    const fetchEvent = async () => {
+      try {
+        const res = await axios.get(`${FIND_EVENT_BY_ID}/${id}`, {
+          withCredentials: true
+        });
+
+        setFormData({
+          title: res.data.title,
+          description: res.data.description,
+          venue: res.data.venue,
+          price: res.data.price,
+          capacity: res.data.capacity,
+          date: formatDateForUI(res.data.date),
+          time: res.data.time,
+          category: res.data.category,
+          banner: res.data.banner,
+        })
+        setBannerPreview(res.data.banner)
+      } catch (error) {
+        toast.error("Something Went Wrong!")
+      }
+    }
+    fetchEvent()
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -69,7 +98,7 @@ const UpdateEvent = () => {
     let hour = Number(h);
     if (period === 'PM' && hour < 12) hour += 12;
     if (period === 'AM' && hour === 12) hour = 0;
-    return `${hour.toString().padStart(2,'0')}:${m}`;
+    return `${hour.toString().padStart(2, '0')}:${m}`;
   };
 
   const handleSubmit = async (e) => {
@@ -89,15 +118,15 @@ const UpdateEvent = () => {
       }
     }
 
-    console.log("FormData entries:", [...payload]); // Debug log
+    console.log("FormData entries:", [...payload]);
 
     try {
-      const res = await axios.post(CREATE_EVENT, payload, {
+      await axios.put(`${UPDATE_EVENT}/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
         withCredentials: true
       });
-      toast.success(res.data.message || "Event created successfully!");
-      navigate('/user-profile');
+      toast.success("Event Updated Successfully successfully!");
+      navigate('/event');
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Something went wrong, try again later");
@@ -137,7 +166,6 @@ const UpdateEvent = () => {
               onChange={handleBannerChange}
               accept="image/jpeg,image/png"
               className="form-input"
-              required
             />
             {bannerPreview && <img src={bannerPreview} alt="Banner Preview" className="banner-preview" />}
           </>

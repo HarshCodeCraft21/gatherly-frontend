@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ALL_EVENT } from '../../api/api.js';
 import { Calendar, MapPin, Users, IndianRupee } from 'lucide-react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import techConference from '../../assets/tech-conference.jpg'; // fallback image
 import './Events.css';
-import { ScrollBar } from '../scrollbar/scrollbar.jsx';
+// import { ScrollBar } from '../scrollbar/scrollbar.jsx';
 
 const Events = () => {
   const navigate = useNavigate();

@@ -84,7 +84,7 @@ const App: React.FC = () => {
                 
               />
               <Route 
-                path="/update-event"
+                path="/update-event/:id"
                 element={
                   verifyToken ? <UpdateEvent /> : <Navigate to='/login' replace />
                 }
