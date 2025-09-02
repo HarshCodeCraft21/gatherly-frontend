@@ -2,7 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Edit, Trash2, Calendar, Users } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Trash2, Calendar, Users, Edit } from "lucide-react";
 import { useState, useEffect } from "react";
 import AvatarSelector from "@/components/AvatarSelector";
 import avatar from "@/assets/avatars/placeholder.png";
@@ -34,10 +35,6 @@ const UserProfile = () => {
     const [user, setUser] = useState<DecodedToken | null>(null);
     const [events, setEvents] = useState<Event[]>([]);
     const [selectedAvatar, setSelectedAvatar] = useState(avatar);
-
-    // For editing
-    const [editingEvent_id, setEditingEvent_id] = useState<string | null>(null);
-    const [editedEvent, setEditedEvent] = useState<Partial<Event>>({});
     const [loadingDeleteId, setLoadingDeleteId] = useState<string | null>(null);
     const [expandedDescriptions, setExpandedDescriptions] = useState<{
         [key: string]: boolean;
@@ -52,9 +49,9 @@ const UserProfile = () => {
                 const decoded: DecodedToken = jwtDecode(token);
                 setUser(decoded);
 
-                // Restore avatar
                 const stored = localStorage.getItem(`avatar-${decoded.id}`);
                 if (stored) setSelectedAvatar(stored);
+
                 try {
                     if (decoded.role === "admin") {
                         const res = await axios.get(TOTALCREATEDEVENT, {
@@ -81,7 +78,6 @@ const UserProfile = () => {
     const handleAvatarSelect = (avatarSrc: string) => {
         if (!user) return;
         setSelectedAvatar(avatarSrc);
-        console.log(user)
         localStorage.setItem(`avatar-${user.id}`, avatarSrc);
     };
 
@@ -193,74 +189,34 @@ const UserProfile = () => {
                                 >
                                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                                         <div className="flex-1 space-y-2">
-                                            {user.role === "admin" &&
-                                                editingEvent_id === event._id ? (
-                                                <>
-                                                    <input
-                                                        type="text"
-                                                        value={editedEvent.title || ""}
-                                                        onChange={(e) =>
-                                                            setEditedEvent((prev) => ({
-                                                                ...prev,
-                                                                title: e.target.value,
-                                                            }))
-                                                        }
-                                                        className="w-full border rounded p-2 text-sm sm:text-base"
-                                                    />
-                                                    <textarea
-                                                        value={editedEvent.description || ""}
-                                                        onChange={(e) =>
-                                                            setEditedEvent((prev) => ({
-                                                                ...prev,
-                                                                description: e.target.value,
-                                                            }))
-                                                        }
-                                                        className="w-full border rounded p-2 text-sm sm:text-base"
-                                                    />
-                                                    <input
-                                                        type="date"
-                                                        value={editedEvent.date?.split("T")[0] || ""}
-                                                        onChange={(e) =>
-                                                            setEditedEvent((prev) => ({
-                                                                ...prev,
-                                                                date: e.target.value,
-                                                            }))
-                                                        }
-                                                        className="w-full border rounded p-2 text-sm sm:text-base"
-                                                    />
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <h3 className="font-semibold text-base sm:text-lg text-foreground">
-                                                        {event.title}
-                                                    </h3>
-                                                    <p className="text-xs sm:text-sm text-muted-foreground">
-                                                        {expandedDescriptions[event._id]
-                                                            ? event.description
-                                                            : event.description.length > 100
-                                                                ? `${event.description.slice(0, 100)}...`
-                                                                : event.description}
-                                                    </p>
-                                                    {event.description.length > 100 && (
-                                                        <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                toggleDescription(event._id);
-                                                            }}
-                                                            className="text-purple-600 text-xs sm:text-sm font-medium mt-1 hover:underline"
-                                                        >
-                                                            {expandedDescriptions[event._id]
-                                                                ? "Read Less"
-                                                                : "Read More"}
-                                                        </button>
-                                                    )}
-                                                    <p className="text-purple-primary font-medium text-sm sm:text-base">
-                                                        {new Date(event.date)
-                                                            .toLocaleDateString("en-GB")
-                                                            .replace(/\//g, "-")}
-                                                    </p>
-                                                </>
+                                            <h3 className="font-semibold text-base sm:text-lg text-foreground">
+                                                {event.title}
+                                            </h3>
+                                            <p className="text-xs sm:text-sm text-muted-foreground">
+                                                {expandedDescriptions[event._id]
+                                                    ? event.description
+                                                    : event.description.length > 100
+                                                        ? `${event.description.slice(0, 100)}...`
+                                                        : event.description}
+                                            </p>
+                                            {event.description.length > 100 && (
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleDescription(event._id);
+                                                    }}
+                                                    className="text-purple-600 text-xs sm:text-sm font-medium mt-1 hover:underline"
+                                                >
+                                                    {expandedDescriptions[event._id]
+                                                        ? "Read Less"
+                                                        : "Read More"}
+                                                </button>
                                             )}
+                                            <p className="text-purple-primary font-medium text-sm sm:text-base">
+                                                {new Date(event.date)
+                                                    .toLocaleDateString("en-GB")
+                                                    .replace(/\//g, "-")}
+                                            </p>
                                         </div>
 
                                         {/* Buttons only for admin */}
@@ -271,40 +227,46 @@ const UserProfile = () => {
                                                     size="sm"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        navigate(`/update-event/${event._id}`)
+                                                        navigate(`/update-event/${event._id}`);
                                                     }}
                                                 >
-                                                    {editingEvent_id === event._id ? (
-                                                        "Save"
-                                                    ) : (
-                                                        <>
-                                                            <Edit className="h-4 w-4 mr-1" /> Edit
-                                                        </>
-                                                    )}
+                                                    <Edit className="h-4 w-4 mr-1" /> Edit
                                                 </Button>
-                                                <Button
-                                                    variant="outline"
-                                                    size="sm"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDeleteEvent(event._id);
-                                                    }}
-                                                    disabled={loadingDeleteId === event._id}
-                                                    className="border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center"
-                                                >
-                                                    {loadingDeleteId === event._id ? (
-                                                        <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                                    ) : (
-                                                        <>
+
+                                                {/* Popover for delete confirmation */}
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center"
+                                                            onClick={(e) => e.stopPropagation()}
+                                                        >
                                                             <Trash2 className="h-4 w-4 mr-1" />
                                                             Delete
-                                                        </>
-                                                    )}
-                                                </Button>
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-48 p-3 flex flex-col gap-2">
+                                                        <p className="text-sm text-muted-foreground">
+                                                            Are you sure?
+                                                        </p>
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="sm"
+                                                            disabled={loadingDeleteId === event._id}
+                                                            onClick={() => handleDeleteEvent(event._id)}
+                                                        >
+                                                            {loadingDeleteId === event._id ? (
+                                                                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                                            ) : (
+                                                                "Confirm Delete"
+                                                            )}
+                                                        </Button>
+                                                    </PopoverContent>
+                                                </Popover>
                                             </div>
                                         )}
 
-                                        {/* Registered badge only for normal user */}
                                         {user.role === "user" && (
                                             <Badge
                                                 variant="outline"

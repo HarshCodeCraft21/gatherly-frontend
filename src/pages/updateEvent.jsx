@@ -127,7 +127,7 @@ const UpdateEvent = () => {
         withCredentials: true,
       });
       toast.success("Event Updated Successfully!");
-      navigate('/events');
+      navigate(`/events/${id}`);
     } catch (err) {
       console.error(err.response?.data || err.message);
       toast.error(err.response?.data?.message || "Something went wrong");
