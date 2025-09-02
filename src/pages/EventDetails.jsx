@@ -121,7 +121,14 @@ const EventDetails = () => {
     }
   };
 
-  if (loading) return <div className="event-details-page"><h2>Loading event details...</h2></div>;
+  if (loading) {
+    return (
+      <div className="spinner-container">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
   if (!event) return (
     <div className="event-details-page">
       <h1>Event not found</h1>

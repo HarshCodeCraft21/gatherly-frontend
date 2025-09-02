@@ -109,7 +109,7 @@ const UpdateEvent = () => {
     const payload = new FormData();
 
     for (const key in formData) {
-      if (formData[key] !== null && formData[key] !== '' && formData[key] !== undefined) {
+      if (formData[key] !== null && formData[key] !== '') {
         if (key === "time") {
           payload.append(key, formatTime24(formData[key]));
         } else {
@@ -118,22 +118,25 @@ const UpdateEvent = () => {
       }
     }
 
-    console.log("FormData entries:", [...payload]);
-
     try {
       await axios.put(`${UPDATE_EVENT}/${id}`, payload, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
-        withCredentials: true
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true,
       });
-      toast.success("Event Updated Successfully successfully!");
-      navigate('/event');
+      toast.success("Event Updated Successfully!");
+      navigate('/events');
     } catch (err) {
       console.error(err.response?.data || err.message);
-      toast.error(err.response?.data?.message || "Something went wrong, try again later");
+      toast.error(err.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
   };
+
+
 
   const fields = [
     { name: "title", label: "Event Title", icon: <FileText className="label-icon" />, type: "text", placeholder: "Enter event title" },
