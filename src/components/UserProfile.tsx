@@ -24,7 +24,7 @@ interface Event {
 }
 
 interface DecodedToken {
-    _id: string;
+    id: string;
     name: string;
     email: string;
     role: "user" | "admin";
@@ -53,9 +53,8 @@ const UserProfile = () => {
                 setUser(decoded);
 
                 // Restore avatar
-                const stored = localStorage.getItem(`avatar-${decoded._id}`);
+                const stored = localStorage.getItem(`avatar-${decoded.id}`);
                 if (stored) setSelectedAvatar(stored);
-
                 try {
                     if (decoded.role === "admin") {
                         const res = await axios.get(TOTALCREATEDEVENT, {
@@ -82,7 +81,8 @@ const UserProfile = () => {
     const handleAvatarSelect = (avatarSrc: string) => {
         if (!user) return;
         setSelectedAvatar(avatarSrc);
-        localStorage.setItem(`avatar-${user._id}`, avatarSrc);
+        console.log(user)
+        localStorage.setItem(`avatar-${user.id}`, avatarSrc);
     };
 
     const handleDeleteEvent = async (event_id: string) => {
