@@ -154,7 +154,7 @@
   cursor: pointer;
   min-width: clamp(100px, 30vw, 120px);
   transition: all 0.3s ease;
-  touch-action: manipulation; /* Improves touch responsiveness */
+  touch-action: manipulation;
 }
 
 .cancel-btn {
@@ -222,12 +222,38 @@
   gap:0.5rem!important;
 }
 .react-time-picker__inputGroup__input,.react-time-picker__inputGroup__amPm{
-  /* position: relative!important; */
-  /* bottom: 6px!important; */
   border:1px solid var(--border)!important;
   background: none!important;
   padding:5px 10px!important;
 }
+
+/* === AI Description Button === */
+.description-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ai-generate-btn {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  width: fit-content;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.ai-generate-btn:hover {
+  background: linear-gradient(90deg, #4f46e5, #4338ca);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
 /* Media Queries */
 @media (max-width: 1024px) {
   .form-grid {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Users, DollarSign, FileText, Clock, UploadIcon } from 'lucide-react';
 import TimePicker from 'react-time-picker';
@@ -9,7 +9,8 @@ import { CREATE_EVENT } from '../api/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import './CreateEvent.css'
+import './CreateEvent.css';
+import GenerateAI from '../components/GenAi/generateAI.jsx';
 
 const CreateEvent = () => {
   const navigate = useNavigate();
@@ -28,6 +29,12 @@ const CreateEvent = () => {
   const [bannerPreview, setBannerPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Typing effect states
+  const [typingText, setTypingText] = useState("");
+  const [typedText, setTypedText] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const typingRef = useRef(null);
+
   useEffect(() => {
     if (!Cookies.get("JwtToken")) {
       toast.error("Please login first");
@@ -35,14 +42,17 @@ const CreateEvent = () => {
     }
   }, [navigate]);
 
+  // Input change
   const handleChange = (e) => {
     const { name, value, type } = e.target;
     let val = type === "number" ? (value === "" ? 0 : Number(value)) : value;
     setFormData(prev => ({ ...prev, [name]: val }));
   };
 
+  // Time change
   const handleTimeChange = (value) => setFormData(prev => ({ ...prev, time: value }));
 
+  // Banner upload
   const handleBannerChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -62,16 +72,17 @@ const CreateEvent = () => {
     }
   };
 
-  // Convert 12-hour to 24-hour format for backend
+  // Convert 12hr → 24hr for backend
   const formatTime24 = (time) => {
     if (!time) return '';
     const [h, m, period] = time.split(/[: ]/);
     let hour = Number(h);
     if (period === 'PM' && hour < 12) hour += 12;
     if (period === 'AM' && hour === 12) hour = 0;
-    return `${hour.toString().padStart(2,'0')}:${m}`;
+    return `${hour.toString().padStart(2, '0')}:${m}`;
   };
 
+  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -89,8 +100,6 @@ const CreateEvent = () => {
       }
     }
 
-    console.log("FormData entries:", [...payload]); // Debug log
-
     try {
       const res = await axios.post(CREATE_EVENT, payload, {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
@@ -104,6 +113,42 @@ const CreateEvent = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // AI Generate Description
+  const handleGenerateDescription = async () => {
+    if (!formData.title.trim()) {
+      toast.error("Please enter the event title first!");
+      return;
+    }
+    try {
+      const aiText = await GenerateAI(formData.title);
+      if (aiText) {
+        setTypingText(aiText);
+        setTypedText("");
+        setIsTyping(true);
+
+        let i = 0;
+        typingRef.current = setInterval(() => {
+          setTypedText((prev) => prev + aiText[i]);
+          i++;
+          if (i >= aiText.length) {
+            clearInterval(typingRef.current);
+            setIsTyping(false);
+            setFormData((prev) => ({ ...prev, description: aiText }));
+          }
+        }, 30);
+      }
+    } catch (error) {
+      toast.error("Failed to generate description");
+    }
+  };
+
+  // Stop typing
+  const handleStopTyping = () => {
+    clearInterval(typingRef.current);
+    setIsTyping(false);
+    setFormData((prev) => ({ ...prev, description: typedText }));
   };
 
   const fields = [
@@ -120,10 +165,37 @@ const CreateEvent = () => {
   const renderField = (field) => {
     switch (field.type) {
       case "textarea":
-        return <textarea name={field.name} value={formData[field.name]} onChange={handleChange} placeholder={field.placeholder} rows={field.rows} className="form-textarea" required />;
+        return (
+          <div className="description-wrapper">
+            <textarea
+              name={field.name}
+              value={isTyping ? typedText : formData[field.name]}
+              onChange={handleChange}
+              placeholder={field.placeholder}
+              rows={field.rows}
+              className="form-textarea"
+              required
+            />
+            {formData.title.trim() !== "" && (
+              <button
+                type="button"
+                className="ai-generate-btn"
+                onClick={isTyping ? handleStopTyping : handleGenerateDescription}
+              >
+                {isTyping ? "⏹ Stop" : "Generate with AI"}
+              </button>
+            )}
+          </div>
+        );
       case "select":
         return (
-          <select name={field.name} value={formData[field.name]} onChange={handleChange} className="form-select" required>
+          <select
+            name={field.name}
+            value={formData[field.name]}
+            onChange={handleChange}
+            className="form-select"
+            required
+          >
             <option value="">Select a category</option>
             {field.options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
           </select>
@@ -143,7 +215,19 @@ const CreateEvent = () => {
           </>
         );
       default:
-        return <input type={field.type} name={field.name} value={formData[field.name]} onChange={handleChange} placeholder={field.placeholder} min={field.min} step={field.step} className="form-input" required />;
+        return (
+          <input
+            type={field.type}
+            name={field.name}
+            value={formData[field.name]}
+            onChange={handleChange}
+            placeholder={field.placeholder}
+            min={field.min}
+            step={field.step}
+            className="form-input"
+            required
+          />
+        );
     }
   };
 
