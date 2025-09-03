@@ -10,13 +10,16 @@ const Events = ({ inputData }) => {
   const navigate = useNavigate();
   const [event, setEvent] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const token = localStorage.getItem("JwtToken");
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         if (inputData && inputData.trim() !== "") {
-          const res = await axios.get(`https://gatherly-dyco.onrender.com/api/search/events?keyword=${inputData}`, { withCredentials: true });
+          const res = await axios.get(`https://gatherly-dyco.onrender.com/api/search/events?keyword=${encodeURIComponent(inputData.trim())}`, {
+            withCredentials: true,
+            headers: { Authorization: `Bearer ${token}` }
+          });
           setEvent(res.data.result || []);
         } else {
           const res = await axios.get(ALL_EVENT, {
