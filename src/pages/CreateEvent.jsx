@@ -29,7 +29,6 @@ const CreateEvent = () => {
   const [bannerPreview, setBannerPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Typing effect states
   const [typingText, setTypingText] = useState("");
   const [typedText, setTypedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -49,7 +48,6 @@ const CreateEvent = () => {
     setFormData(prev => ({ ...prev, [name]: val }));
   };
 
-  // Time change
   const handleTimeChange = (value) => setFormData(prev => ({ ...prev, time: value }));
 
   // Banner upload

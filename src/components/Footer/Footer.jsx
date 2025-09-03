@@ -15,7 +15,7 @@ const Footer = () => {
               <span>Gatherly</span>
             </Link>
             <p className="footer-description">
-              Connecting communities through extraordinary events and meaningful experiences. 
+              Connecting communities through extraordinary events and meaningful experiences.
               Join thousands of people discovering amazing events every day.
             </p>
             <div className="social-links">
@@ -48,11 +48,13 @@ const Footer = () => {
           <div className="footer-section">
             <h3 className="footer-title">Categories</h3>
             <ul className="footer-links">
-              <li><a href="#">Technology</a></li>
-              <li><a href="#">Business</a></li>
-              <li><a href="#">Arts & Culture</a></li>
-              <li><a href="#">Music</a></li>
-              <li><a href="#">Food & Drink</a></li>
+              {
+                ["Technology", "Business", "Education", "Health & Fitness", "Art & Culture"].map((event, index) => (
+                  <li key={index}>
+                    <Link to="/events" state={{ category: event }}>{event}</Link>
+                  </li>
+                ))
+              }
             </ul>
           </div>
 

@@ -1,11 +1,21 @@
 import { Search } from "lucide-react";
 import Events from "../components/Events/Events";
 import "./EventsPage.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const EventsPage = () => {
   const [isFocused, setIsFocused] = useState(false);
-  const [inputData,setInputData] = useState("");
+  const [inputData, setInputData] = useState("");
+  const location = useLocation();
+
+  // jab bhi location change ho (footer link click se), category set karo
+  useEffect(() => {
+    if (location.state?.category) {
+      setInputData(location.state.category);
+    }
+  }, [location]);
+
   return (
     <div className="events-page">
       <div
@@ -34,9 +44,10 @@ const EventsPage = () => {
               fontSize: "16px",
             }}
             placeholder="Search here..."
+            value={inputData}   // <-- important
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            onChange={(e)=>{setInputData(e.target.value)}}
+            onChange={(e) => setInputData(e.target.value)}
           />
           {!isFocused && (
             <Search
@@ -60,7 +71,7 @@ const EventsPage = () => {
         </p>
       </div>
 
-      <Events inputData={inputData}/>
+      <Events inputData={inputData} />
     </div>
   );
 };
