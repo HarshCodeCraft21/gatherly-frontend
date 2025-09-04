@@ -1,18 +1,26 @@
 import { Search } from "lucide-react";
 import Events from "../components/Events/Events";
 import "./EventsPage.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import ScrollToTop from '../components/ScrollTop/ScrollToTop'
 
 const EventsPage = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputData, setInputData] = useState("");
   const location = useLocation();
 
-  // jab bhi location change ho (footer link click se), category set karo
+  // 👇 useRef banaya input ke liye
+  const inputRef = useRef(null);
+
   useEffect(() => {
     if (location.state?.category) {
       setInputData(location.state.category);
+
+      // 👇 input pe focus ho jaega jab category set ho
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
     }
   }, [location]);
 
@@ -30,21 +38,22 @@ const EventsPage = () => {
           style={{
             position: "relative",
             width: "100%",
-            maxWidth: "500px", // keeps it nice on desktop
+            maxWidth: "500px",
           }}
         >
           <input
+            ref={inputRef} // 👈 ref lagaya
             type="text"
             style={{
               border: "1px solid black",
               width: "100%",
               height: "40px",
-              padding: "0 40px 0 16px", // space for search icon
+              padding: "0 40px 0 16px",
               borderRadius: "25px",
               fontSize: "16px",
             }}
             placeholder="Search here..."
-            value={inputData}   // <-- important
+            value={inputData}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onChange={(e) => setInputData(e.target.value)}
